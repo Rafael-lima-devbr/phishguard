@@ -1,0 +1,4 @@
+url,label
+https://example.com/,legitimate
+http://192.0.2.1/login/verify-account,fraudulent
+https://phishing-test.invalid/,fraudulent

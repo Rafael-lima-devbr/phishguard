@@ -1,0 +1,9 @@
+{
+  "name": "phishguard-browser-extension",
+  "version": "0.3.0",
+  "private": true,
+  "scripts": {
+    "update-threat-db": "node scripts/update-threat-database.js",
+    "evaluate": "node scripts/evaluate-dataset.js"
+  }
+}

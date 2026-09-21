@@ -2,6 +2,7 @@ const params = new URLSearchParams(window.location.search);
 const destinationUrl = params.get("url") || "";
 const level = params.get("level") === "blocked" ? "blocked" : "suspicious";
 const score = Number(params.get("score")) || 0;
+const externalSource = params.get("externalSource");
 
 let reasons = [];
 try {
@@ -21,10 +22,17 @@ for (const reason of reasons) {
   document.querySelector("#reasons").append(item);
 }
 
+if (externalSource) {
+  document.querySelector("#external-source").textContent = externalSource;
+  document.querySelector("#external-evidence").hidden = false;
+}
+
 if (level === "blocked") {
-  levelElement.textContent = "MALICIOSO CONFIRMADO";
+  levelElement.textContent = externalSource ? "LISTADO EM BASE DE PHISHING" : "AMEAÇA CONFIRMADA LOCALMENTE";
   levelElement.classList.add("malicious");
-  document.querySelector("#title").textContent = "Navegação bloqueada";
+  document.querySelector("#title").textContent = externalSource
+    ? "Navegação bloqueada por reputação"
+    : "Navegação bloqueada";
   continueButton.hidden = true;
 } else {
   levelElement.textContent = "SUSPEITO";

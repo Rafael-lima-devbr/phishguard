@@ -1,0 +1,4 @@
+url,label,local_score,local_classification,external_listed,external_source,final_classification
+https://example.com/,legitimate,0,safe,false,Phishing.Database,safe
+http://192.0.2.1/login/verify-account,fraudulent,70,suspicious,false,Phishing.Database,suspicious
+https://phishing-test.invalid/,fraudulent,100,blocked,false,Phishing.Database,blocked

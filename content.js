@@ -1,4 +1,4 @@
-document.addEventListener("click", (event) => {
+document.addEventListener("click", async (event) => {
   if (event.defaultPrevented || event.button !== 0) return;
 
   const link = event.target.closest("a[href]");
@@ -7,21 +7,49 @@ document.addEventListener("click", (event) => {
   const destination = new URL(link.href, document.baseURI);
   if (!["http:", "https:"].includes(destination.protocol)) return;
 
-  const analysis = analyzeUrl(destination.href);
-  if (analysis.level === "safe") return;
-
   event.preventDefault();
   event.stopImmediatePropagation();
+  const openInNewTab = link.target === "_blank" || event.ctrlKey || event.metaKey || event.shiftKey;
 
-  const warningUrl = new URL(chrome.runtime.getURL("warning.html"));
-  warningUrl.searchParams.set("url", destination.href);
-  warningUrl.searchParams.set("level", analysis.level);
-  warningUrl.searchParams.set("score", String(analysis.score));
-  warningUrl.searchParams.set("reasons", JSON.stringify(analysis.reasons));
+  try {
+    const response = await chrome.runtime.sendMessage({ type: "evaluate-url", url: destination.href });
+    if (!response?.ok) throw new Error("Análise indisponível");
 
-  if (link.target === "_blank" || event.ctrlKey || event.metaKey || event.shiftKey) {
-    window.open(warningUrl.href, "_blank", "noopener");
-  } else {
-    window.location.assign(warningUrl.href);
+    const evaluation = response.evaluation;
+    const nextUrl = evaluation.finalClassification === "safe"
+      ? destination.href
+      : buildWarningUrl(destination.href, evaluation);
+
+    if (openInNewTab) {
+      await chrome.runtime.sendMessage({ type: "open-result-url", url: nextUrl });
+    } else {
+      window.location.assign(nextUrl);
+    }
+  } catch {
+    const localAnalysis = analyzeUrl(destination.href);
+    if (localAnalysis.level === "safe") {
+      if (openInNewTab) window.open(destination.href, "_blank", "noopener");
+      else window.location.assign(destination.href);
+      return;
+    }
+    window.location.assign(buildWarningUrl(destination.href, {
+      finalClassification: localAnalysis.level,
+      score: localAnalysis.score,
+      reasons: localAnalysis.reasons,
+      externalReputation: { listed: false }
+    }));
   }
 }, true);
+
+function buildWarningUrl(url, evaluation) {
+  const warningUrl = new URL(chrome.runtime.getURL("warning.html"));
+  warningUrl.searchParams.set("url", url);
+  warningUrl.searchParams.set("level", evaluation.finalClassification);
+  warningUrl.searchParams.set("score", String(evaluation.score));
+  warningUrl.searchParams.set("reasons", JSON.stringify(evaluation.reasons));
+  if (evaluation.externalReputation.listed) {
+    warningUrl.searchParams.set("externalSource", evaluation.externalReputation.source);
+    warningUrl.searchParams.set("matchType", evaluation.externalReputation.matchType);
+  }
+  return warningUrl.href;
+}

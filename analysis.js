@@ -98,3 +98,7 @@ function decodeURIComponentSafe(value) {
     return value;
   }
 }
+
+if (typeof module !== "undefined") {
+  module.exports = { analyzeUrl };
+}
