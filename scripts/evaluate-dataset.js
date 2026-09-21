@@ -53,7 +53,7 @@ function metrics(records, classificationField) {
 }
 
 function main() {
-  const [, , inputPath, outputPath = "evaluation/results.csv"] = process.argv;
+  const [, , inputPath, outputPath = "evaluation/results/raw/dataset-a-v1.csv"] = process.argv;
   if (!inputPath) throw new Error("Uso: npm run evaluate -- entrada.csv [saida.csv]");
 
   const rows = parseCsv(fs.readFileSync(inputPath, "utf8"));
@@ -63,7 +63,7 @@ function main() {
 
   let databaseData = {};
   try {
-    databaseData = JSON.parse(fs.readFileSync("data/threat-db.json", "utf8"));
+    databaseData = JSON.parse(fs.readFileSync("reputation/threat-db.json", "utf8"));
   } catch {
     console.warn("Base externa indisponível; avaliando apenas a análise local.");
   }

@@ -10,7 +10,7 @@ O `analyzeUrl(url)` atribui um score a sinais simples, como HTTP, endereço IP, 
 - `suspicious`: exibe os motivos e permite voltar ou continuar;
 - `blocked`: evidência confirmada local ou correspondência na base de reputação, sem opção de continuar.
 
-Depois da heurística, `checkExternalReputation(url)` procura a URL normalizada e, quando aplicável, o domínio exato em `data/threat-db.json`. A base é gerada a partir do feed ativo `phishing-links-ACTIVE.txt` do projeto open source [Phishing.Database](https://github.com/Phishing-Database/Phishing.Database). URLs de raiz do feed também geram uma entrada de domínio; URLs com caminho não são ampliadas para o domínio inteiro. A ausência de uma entrada nessa base não comprova que o destino seja seguro.
+Depois da heurística, `checkExternalReputation(url)` procura a URL normalizada e, quando aplicável, o domínio exato em `reputation/threat-db.json`. A base é gerada a partir do feed ativo `phishing-links-ACTIVE.txt` do projeto open source [Phishing.Database](https://github.com/Phishing-Database/Phishing.Database). URLs de raiz do feed também geram uma entrada de domínio; URLs com caminho não são ampliadas para o domínio inteiro. A ausência de uma entrada nessa base não comprova que o destino seja seguro.
 
 Cliques são analisados antes de sair da página. Outras navegações, inclusive URLs digitadas na barra, são observadas pelo service worker com `webNavigation.onBeforeNavigate` e redirecionadas para a tela de aviso quando necessário.
 
@@ -20,7 +20,7 @@ Cliques são analisados antes de sair da página. Outras navegações, inclusive
 - `reputation.js`: normaliza e consulta a base externa local usando `Set`.
 - `content.js`: intercepta cliques e solicita a avaliação combinada.
 - `background.js`: carrega a base uma vez, combina evidências, observa navegações e controla a exceção de continuar uma vez.
-- `data/threat-db.json`: snapshot local gerado dos feeds ativos.
+- `reputation/threat-db.json`: snapshot local gerado dos feeds ativos.
 - `scripts/update-threat-database.js`: atualiza, valida, normaliza e remove duplicatas da base.
 - `scripts/evaluate-dataset.js`: gera CSV e compara métricas da heurística com o método combinado.
 - `warning.html` e `warning.js`: tela de aviso ou bloqueio.
@@ -60,12 +60,23 @@ node scripts/build-evaluation-dataset.js
 Depois execute:
 
 ```bash
-node scripts/evaluate-dataset.js evaluation/dataset-clean.csv evaluation/results.csv
+node scripts/evaluate-dataset.js evaluation/datasets/dataset-a.csv evaluation/results/raw/dataset-a-v1.csv
 ```
 
 O resultado registra `local_score`, `local_classification`, `external_listed`, `external_source` e `final_classification`. O terminal apresenta detecções, omissões, falsos alertas, liberações corretas, taxa de detecção, taxa de falso alerta e acurácia separadamente para o método local e o combinado.
 
-Como os feeds mudam com o tempo, `evaluation/dataset-clean.csv` preserva exatamente a amostra utilizada e `evaluation/RUN_INFO.md` registra hashes, horário, versão do Node.js e commit avaliado.
+Como os feeds mudam com o tempo, `evaluation/datasets/dataset-a.csv` preserva exatamente a amostra utilizada e `evaluation/runs/` registra hashes, horário, versão do Node.js e commit avaliado.
+
+## Estrutura do repositório
+
+- Arquivos na raiz: código e configuração carregados diretamente pelo Edge, além dos documentos padrão do projeto.
+- `reputation/`: snapshot da base Phishing.Database usada pela extensão durante a classificação.
+- `scripts/`: utilitários de manutenção da reputação, construção dos datasets e avaliação.
+- `tests/`: verificações automatizadas das regras locais.
+- `evaluation/datasets/`: entradas experimentais e amostras auxiliares.
+- `evaluation/results/`: resultados brutos, derivados e relatórios.
+- `evaluation/runs/`: registros históricos das execuções.
+- `evaluation/docs/`: origem dos datasets e mudanças documentadas entre versões.
 
 ## Limitações do MVP
 

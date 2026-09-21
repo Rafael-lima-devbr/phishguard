@@ -85,6 +85,11 @@ function toCsv(rows) {
 
 async function main() {
   const acquiredAt = new Date().toISOString();
+  const evaluationRoot = path.join(__dirname, "..", "evaluation");
+  const datasetsDirectory = path.join(evaluationRoot, "datasets");
+  const documentationDirectory = path.join(evaluationRoot, "docs");
+  await fs.mkdir(datasetsDirectory, { recursive: true });
+  await fs.mkdir(documentationDirectory, { recursive: true });
   console.log("Baixando arquivos de dados OpenPhish e Majestic Million...");
   const [openPhishText, majesticLines] = await Promise.all([
     fetchText(OPENPHISH_FEED),
@@ -108,11 +113,11 @@ async function main() {
   const validLegitimate = legitimateCandidates.filter((row) => validHttpUrl(row.url));
 
   const rawRows = [...validLegitimate, ...phishingCandidates];
-  await fs.writeFile(path.join(__dirname, "..", "evaluation", "dataset.csv"), toCsv(rawRows));
+  await fs.writeFile(path.join(datasetsDirectory, "candidates.csv"), toCsv(rawRows));
 
   const phishingDedup = uniqueByNormalizedUrl(phishingCandidates);
   const legitimateDedup = uniqueByNormalizedUrl(validLegitimate);
-  const databaseData = JSON.parse(await fs.readFile(path.join(__dirname, "..", "data", "threat-db.json"), "utf8"));
+  const databaseData = JSON.parse(await fs.readFile(path.join(__dirname, "..", "reputation", "threat-db.json"), "utf8"));
   const reputationDatabase = createReputationDatabase(databaseData);
 
   let overlapPhishing = 0;
@@ -136,7 +141,7 @@ async function main() {
     ...independentLegitimate.slice(0, CLASS_SIZE),
     ...independentPhishing.slice(0, CLASS_SIZE)
   ];
-  await fs.writeFile(path.join(__dirname, "..", "evaluation", "dataset-clean.csv"), toCsv(cleanRows));
+  await fs.writeFile(path.join(datasetsDirectory, "dataset-a.csv"), toCsv(cleanRows));
 
   const discarded = rawRows.length - cleanRows.length;
   const documentation = `# Dataset de avaliação independente\n\n` +
@@ -159,7 +164,7 @@ async function main() {
     `Entradas que coincidiam com a base local Phishing.Database foram excluídas antes da seleção balanceada de ${CLASS_SIZE} itens por classe. ` +
     `As URLs phishing foram preservadas como texto; os domínios Majestic foram representados como URLs HTTPS de raiz. ` +
     `Nenhum site listado foi aberto, visitado ou consultado individualmente.\n`;
-  await fs.writeFile(path.join(__dirname, "..", "evaluation", "DATASET.md"), documentation);
+  await fs.writeFile(path.join(documentationDirectory, "dataset-a.md"), documentation);
 
   console.log(JSON.stringify({ acquiredAt, raw: rawRows.length, final: cleanRows.length, legitimate: CLASS_SIZE, phishing: CLASS_SIZE, invalid: invalidLegitimate + invalidPhishing, duplicates: phishingDedup.duplicates + legitimateDedup.duplicates, overlapPhishing, overlapLegitimate, discarded }, null, 2));
 }

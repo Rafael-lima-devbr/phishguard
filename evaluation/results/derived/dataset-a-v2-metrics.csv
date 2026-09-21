@@ -1,0 +1,2 @@
+dataset,total_urls,total_legitimate,total_phishing,phishing_detected,phishing_missed,legitimate_false_alerts,legitimate_correctly_allowed,detection_rate_percent,false_alert_rate_percent,accuracy_percent,legitimate_safe,legitimate_suspicious,legitimate_blocked,phishing_safe,phishing_suspicious,phishing_blocked,external_listed_total,external_listed_phishing,external_listed_legitimate
+Dataset A - V2,200,100,100,62,38,1,99,62,1,80.5,99,1,0,38,62,0,0,0,0

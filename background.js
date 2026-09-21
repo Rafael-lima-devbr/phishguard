@@ -9,7 +9,7 @@ function allowanceKey(tabId) {
 
 async function loadReputationDatabase() {
   if (!reputationDatabasePromise) {
-    reputationDatabasePromise = fetch(chrome.runtime.getURL("data/threat-db.json"))
+    reputationDatabasePromise = fetch(chrome.runtime.getURL("reputation/threat-db.json"))
       .then((response) => {
         if (!response.ok) throw new Error("Base de reputação indisponível");
         return response.json();

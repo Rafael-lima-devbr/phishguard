@@ -1,6 +1,6 @@
 # Third-party notices
 
-The generated file `data/threat-db.json` is derived from the active feeds of
+The generated file `reputation/threat-db.json` is derived from the active feeds of
 [Phishing.Database](https://github.com/Phishing-Database/Phishing.Database).
 
 Phishing.Database is distributed under the MIT License:

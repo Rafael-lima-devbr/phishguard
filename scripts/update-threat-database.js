@@ -51,7 +51,9 @@ async function main() {
   };
 
   const serialized = `${JSON.stringify(output)}\n`;
-  const destination = path.join(__dirname, "..", "data", "threat-db.json");
+  const destinationDirectory = path.join(__dirname, "..", "reputation");
+  await fs.mkdir(destinationDirectory, { recursive: true });
+  const destination = path.join(destinationDirectory, "threat-db.json");
   await fs.writeFile(destination, serialized, "utf8");
   console.log(`Base atualizada: ${urls.size} URLs, ${domains.size} domínios, ${(Buffer.byteLength(serialized) / 1024 / 1024).toFixed(2)} MiB.`);
 }
