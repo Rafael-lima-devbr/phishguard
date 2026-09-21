@@ -51,13 +51,21 @@ Se o arquivo local estiver ausente ou inválido, a extensão continua funcionand
 
 ## Avaliação
 
-Prepare um CSV com as colunas `url,label` e execute:
+O conjunto independente versionado usa OpenPhish Community Feed para phishing e Majestic Million para sites legítimos. Para reconstruí-lo com os feeds disponíveis no momento da nova execução:
 
 ```bash
-npm run evaluate -- evaluation/sample.csv evaluation/results.csv
+node scripts/build-evaluation-dataset.js
+```
+
+Depois execute:
+
+```bash
+node scripts/evaluate-dataset.js evaluation/dataset-clean.csv evaluation/results.csv
 ```
 
 O resultado registra `local_score`, `local_classification`, `external_listed`, `external_source` e `final_classification`. O terminal apresenta detecções, omissões, falsos alertas, liberações corretas, taxa de detecção, taxa de falso alerta e acurácia separadamente para o método local e o combinado.
+
+Como os feeds mudam com o tempo, `evaluation/dataset-clean.csv` preserva exatamente a amostra utilizada e `evaluation/RUN_INFO.md` registra hashes, horário, versão do Node.js e commit avaliado.
 
 ## Limitações do MVP
 

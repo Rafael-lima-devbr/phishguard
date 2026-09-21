@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "update-threat-db": "node scripts/update-threat-database.js",
+    "build-evaluation-dataset": "node scripts/build-evaluation-dataset.js",
     "evaluate": "node scripts/evaluate-dataset.js"
   }
 }
