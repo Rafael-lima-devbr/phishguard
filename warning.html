@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PhishGuard — aviso de segurança</title>
+    <style>
+      :root { color-scheme: light; font-family: system-ui, sans-serif; }
+      body { margin: 0; background: #f3f5f8; color: #18202a; }
+      main { max-width: 700px; margin: 8vh auto; padding: 32px; background: white; border-radius: 14px; box-shadow: 0 8px 30px #17202a1a; }
+      .badge { display: inline-block; padding: 6px 10px; border-radius: 999px; font-weight: 700; background: #fff1c2; color: #714f00; }
+      .malicious { background: #ffe0e0; color: #8b1010; }
+      .url { padding: 12px; background: #f3f5f8; border-radius: 8px; overflow-wrap: anywhere; }
+      li { margin: 8px 0; }
+      .actions { display: flex; gap: 12px; margin-top: 28px; }
+      button { border: 0; border-radius: 8px; padding: 11px 18px; font: inherit; font-weight: 650; cursor: pointer; }
+      #back { background: #155eef; color: white; }
+      #continue { background: #e7ebf0; color: #18202a; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <span id="level" class="badge"></span>
+      <h1 id="title"></h1>
+      <p>Destino solicitado:</p>
+      <p id="destination" class="url"></p>
+      <p><strong>Score de risco:</strong> <span id="score"></span>/100</p>
+      <h2>Motivos encontrados</h2>
+      <ul id="reasons"></ul>
+      <div class="actions">
+        <button id="back" type="button">Voltar</button>
+        <button id="continue" type="button">Continuar mesmo assim</button>
+      </div>
+    </main>
+    <script src="warning.js"></script>
+  </body>
+</html>
