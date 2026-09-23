@@ -13,7 +13,7 @@ const LEGITIMATE_CANDIDATE_LIMIT = 200;
 
 async function fetchText(url) {
   const response = await fetch(url, {
-    headers: { "User-Agent": "PhishGuard independent evaluation/0.3" }
+    headers: { "User-Agent": "Phishpect independent evaluation/0.3" }
   });
   if (!response.ok) throw new Error(`Falha ao baixar ${url}: HTTP ${response.status}`);
   return response.text();
@@ -21,7 +21,7 @@ async function fetchText(url) {
 
 async function fetchFirstLines(url, limit) {
   const response = await fetch(url, {
-    headers: { "User-Agent": "PhishGuard independent evaluation/0.3" }
+    headers: { "User-Agent": "Phishpect independent evaluation/0.3" }
   });
   if (!response.ok) throw new Error(`Falha ao baixar ${url}: HTTP ${response.status}`);
 

@@ -6,7 +6,7 @@ const FEED_URL = "https://phish.co.za/latest/phishing-links-ACTIVE.txt";
 
 async function downloadText(url) {
   const response = await fetch(url, {
-    headers: { "User-Agent": "PhishGuard research updater/0.3" }
+    headers: { "User-Agent": "Phishpect research updater/0.3" }
   });
   if (!response.ok) throw new Error(`Falha ao baixar ${url}: HTTP ${response.status}`);
   return response.text();

@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "PhishGuard MVP",
+  "name": "Phishpect MVP",
   "version": "0.4.0",
   "description": "Analisa links localmente antes da navegação e alerta sobre URLs suspeitas.",
   "action": {
-    "default_title": "Abrir testes do PhishGuard",
+    "default_title": "Abrir testes do Phishpect",
     "default_popup": "test.html"
   },
   "background": {

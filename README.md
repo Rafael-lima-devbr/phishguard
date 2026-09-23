@@ -1,4 +1,4 @@
-# PhishGuard
+# Phishpect
 
 Extensão experimental para Microsoft Edge que combina heurísticas locais com uma base local de reputação e intervém conforme o risco de uma página potencialmente fraudulenta.
 
@@ -33,7 +33,7 @@ Cliques são analisados antes de sair da página. Outras navegações, inclusive
 2. Ative **Modo do desenvolvedor**.
 3. Clique em **Carregar sem compactação**.
 4. Selecione a pasta deste projeto.
-5. Clique no ícone do PhishGuard para abrir os testes controlados.
+5. Clique no ícone do Phishpect para abrir os testes controlados.
 
 Ao atualizar o código, clique em **Recarregar** no cartão da extensão.
 
